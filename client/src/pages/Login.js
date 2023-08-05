@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Col, Form, Row, Button, Container } from "react-bootstrap";
 import FormComponent from "../components/form/FormComponent";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../helpers/axiosHelper";
+import { toast } from "react-toastify";
 const Login = () => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState({});
   const inputs = [
     {
       label: "Email",
@@ -20,6 +23,22 @@ const Login = () => {
       placeholder: "*****",
     },
   ];
+
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    setUser({
+      ...user,
+      [name]: value,
+    });
+  };
+  console.log(user);
+
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    const { status, message } = await loginUser(user);
+    toast[status](message);
+    status === "success" && navigate("/dashboard");
+  };
   return (
     <div className="main1">
       <Container className="main">
@@ -31,9 +50,9 @@ const Login = () => {
             </div>
           </Col>
           <Col className="p-5 shadow-lg rounded">
-            <Form>
+            <Form onSubmit={handleOnSubmit}>
               {inputs.map((item, i) => (
-                <FormComponent key={i} {...item} />
+                <FormComponent key={i} {...item} onChange={handleOnChange} />
               ))}
               <Button variant="primary" type="submit">
                 Submit
