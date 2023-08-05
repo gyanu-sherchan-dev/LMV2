@@ -3,6 +3,10 @@ import { createUser, getUser } from "../model/user/UserModel.js";
 
 const router = express();
 
+// router.get("/", (req, res) => {
+//   res.send("hello users");
+// });
+
 //create user
 router.post("/", async (req, res, next) => {
   try {
@@ -27,11 +31,15 @@ router.post("/login", async (req, res, next) => {
   try {
     console.log(req.body);
     const result = await getUser(req.body);
-    result?._id &&
-      res.json({
-        status: "success",
-        message: "User created successfully",
-      });
+    result?._id
+      ? res.json({
+          status: "success",
+          message: "User login successfully",
+        })
+      : res.json({
+          status: "error",
+          message: "User login Invalid",
+        });
   } catch (error) {
     next(error);
   }

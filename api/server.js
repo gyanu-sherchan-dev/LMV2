@@ -7,7 +7,7 @@ import "dotenv/config";
 
 const app = express();
 
-const PORT = 8000;
+const PORT = 5000;
 
 //middlewares
 app.use(express.json());
@@ -19,6 +19,9 @@ app.use(helmet());
 import { connectDB } from "./src/dbConfig/ConfigDb.js";
 connectDB();
 
+// app.get("/api/v1/user", (req, res) => {
+//   res.send("get all users");
+// });
 //router
 import UserRouter from "./src/router/UserRouter.js";
 app.use("/api/v1/user", UserRouter);
