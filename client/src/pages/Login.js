@@ -1,12 +1,14 @@
-import React, { useState } from "react";
-import { Col, Form, Row, Button, Container } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Col, Form, Row, Button, Container, Spinner } from "react-bootstrap";
 import FormComponent from "../components/form/FormComponent";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../helpers/axiosHelper";
-import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { LoginUserAction } from "../redux/userRedux/userAction";
 const Login = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
+  const dispatch = useDispatch();
+
   const inputs = [
     {
       label: "Email",
@@ -24,6 +26,12 @@ const Login = () => {
     },
   ];
 
+  const { isLoggedIn, isLodding } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    isLoggedIn && navigate("/dashboard");
+  }, [isLoggedIn, navigate]);
+
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setUser({
@@ -33,11 +41,13 @@ const Login = () => {
   };
   console.log(user);
 
-  const handleOnSubmit = async (e) => {
+  const handleOnSubmit = (e) => {
     e.preventDefault();
-    const { status, message } = await loginUser(user);
-    toast[status](message);
-    status === "success" && navigate("/dashboard");
+    dispatch(LoginUserAction(user));
+
+    // const { status, message } = await loginUser(user);
+    // toast[status](message);
+    // status === "success" && navigate("/dashboard");
   };
   return (
     <div className="main1">
@@ -56,6 +66,7 @@ const Login = () => {
               ))}
               <Button variant="primary" type="submit">
                 Submit
+                <span>{isLodding && <Spinner variant="border"></Spinner>}</span>
               </Button>
             </Form>
             <div>

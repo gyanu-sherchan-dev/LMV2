@@ -1,0 +1,8 @@
+Login and Registration = frontend and backend done.
+
+Redux
+import react-redux @reduxjs/toolkit
+
+create store.js file in client src
+import provider from react-redux
+import store and pass to provider, wrap app with provider

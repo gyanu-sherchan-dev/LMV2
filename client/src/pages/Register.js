@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Col, Form, Row, Button, Container } from "react-bootstrap";
 import FormComponent from "../components/form/FormComponent";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
-import { registerUser } from "../helpers/axiosHelper";
-import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { registerUserAction } from "../redux/userRedux/userAction";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const inputs = [
     {
       label: "User Name",
@@ -56,8 +58,7 @@ const Login = () => {
     if (confirmPassword !== rest.password) {
       return window.alert("Password do not matched");
     }
-    const { status, message } = await registerUser(rest);
-    toast[status](message);
+    dispatch(registerUserAction(rest)) && navigate("/");
   };
 
   return (
